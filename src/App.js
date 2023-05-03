@@ -44,7 +44,7 @@ function handValue(hand) {
 function handMap(hand) {
   var output = [];
   for (let index in hand) {
-    output.push(<Card value={hand[index].val} key={index}></Card>);
+    output.push(<Card value={hand[index].val} key={index}></Card>); 
   }
   return output;
 }
