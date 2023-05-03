@@ -5,9 +5,6 @@ import Swal from "sweetalert2";
 
 
 
-// Card-related helper funcitons
-const cards = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'K', 'Q', 'A'];
-
 const url = 'https://deckofcardsapi.com/api/deck/new/draw/?count=1';
 const pickCard = async () => {
   const res = await fetch(url);
