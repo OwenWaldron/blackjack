@@ -120,7 +120,7 @@ function App() {
     if (dealer > 21 || dealer < player) {
       setTimeout(() => { Alert('Nice!', 'Congrats, you win! :)', 'success'); }, 1000);
     } else if (dealer === player) {
-      setTimeout(() => { Alert('Nice!', 'Congrats, you win! :)', 'question'); }, 1000);
+      setTimeout(() => { Alert('Could be worse', 'You tied :/', 'question'); }, 1000);
     } else {
       setTimeout(() => { Alert('Not Enough...', 'Sorry, you lose! :(', 'error'); }, 1000);
     }
