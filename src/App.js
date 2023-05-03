@@ -6,15 +6,26 @@ import Swal from "sweetalert2";
 
 
 // Card-related helper funcitons
+const cards = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'K', 'Q', 'A'];
+
+const url = 'https://deckofcardsapi.com/api/deck/new/draw/?count=1';
+const pickCard = async () => {
+  const res = await fetch(url);
+  const data = await res.json();
+  let card = {
+    val: data.cards[0].symbol[0],
+    image: data.cards[0].image
+  };
+  return card;
+}
+
 function handValue(hand) {
   const cards = ['2', '3', '4', '5', '6', '7', '8', '9', '0', 'J', 'K', 'Q', 'A'];
   var sum = 0;
   var aces = 0;
   for (let index in hand) {
-    let card = hand[index].val;
-    if (card === 'X') {
-      return 0;
-    } else if (card === 'A') {
+    let card = hand[index].val
+    if (card === 'A') {
       aces++;
     } else {
       var value = 2 + cards.indexOf(card);
@@ -31,6 +42,14 @@ function handValue(hand) {
     aces--;
   }
   return sum;
+}
+
+function handMap(hand) {
+  var output = [];
+  for (let index in hand) {
+    output.push(<Card value={hand[index].val} key={index}></Card>);
+  }
+  return output;
 }
 // end helper function
 
