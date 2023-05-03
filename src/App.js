@@ -4,21 +4,6 @@ import Hand from './Hand';
 import Swal from "sweetalert2";
 
 
-<<<<<<< Updated upstream
-
-const url = 'https://deckofcardsapi.com/api/deck/new/draw/?count=1';
-const pickCard = async () => {
-  const res = await fetch(url);
-  const data = await res.json();
-  let card = {
-    val: data.cards[0].symbol[0],
-    image: data.cards[0].image
-  };
-  return card;
-}
-
-=======
->>>>>>> Stashed changes
 function handValue(hand) {
   const cards = ['2', '3', '4', '5', '6', '7', '8', '9', '0', 'J', 'K', 'Q', 'A'];
   var sum = 0;
