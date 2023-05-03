@@ -1,6 +1,8 @@
 import './App.css';
 import React, { useEffect, useState } from "react";
 import Hand from './Hand';
+import Swal from "sweetalert2";
+
 
 
 // Card-related helper funcitons
@@ -86,6 +88,16 @@ function App() {
   }
   // end intents
 
+
+  const Alert = (title, text, icon) => {
+    Swal.fire({
+      title: title,
+      text: text,
+      icon: icon,
+      confirmButtonText: 'Okay'
+    })
+  };
+
   
 
   // Effect: check for player loss
@@ -94,7 +106,7 @@ function App() {
     if (val > 21) {
       setPlayable(false);
       setHidden(false);
-      setTimeout(() => { alert('Sorry, you lose! :('); }, 1000);
+      setTimeout(() => { Alert('Too Many!', 'Sorry, you lose! :(', 'error'); }, 1000);
     }
   }, [playerHand]);
 
@@ -110,11 +122,11 @@ function App() {
     let player = handValue(playerHand);
     let dealer = handValue(dealerHand);
     if (dealer > 21 || dealer < player) {
-      setTimeout(() => { alert('Congrats, you win! :)'); }, 1000);
+      setTimeout(() => { Alert('Nice!', 'Congrats, you win! :)', 'success'); }, 1000);
     } else if (dealer === player) {
-      setTimeout(() => { alert('You tied :/'); }, 1000);
+      setTimeout(() => { Alert('Nice!', 'Congrats, you win! :)', 'question'); }, 1000);
     } else {
-      setTimeout(() => { alert('Sorry, you lose!'); }, 1000);
+      setTimeout(() => { Alert('Not Enough...', 'Sorry, you lose! :(', 'error'); }, 1000);
     }
   }, [standing, dealerHand]);
 
@@ -126,8 +138,8 @@ function App() {
   if (!playable) {
     actions = '';
   }
-  var dealerTitle = <h2>Dealer's Hand</h2>;
-  var playerTitle = <h2>Your Hand</h2>;
+  var dealerTitle = <h3>Dealer's Hand</h3>;
+  var playerTitle = <h3>Your Hand</h3>;
   if (dealerHand.length === 0) {
     dealerTitle = null;
     playerTitle = null;
@@ -136,11 +148,7 @@ function App() {
 
   return (
     <div className="App">
-      
-        <h1>
-          BLACKJACK
-        </h1>
-      
+      <h1> BLACKJACK </h1>
       <div className='board'>
         {dealerTitle}
         <Hand cards={dealerHand} hidden={dealerHidden}></Hand>
