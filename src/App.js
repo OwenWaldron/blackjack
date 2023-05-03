@@ -4,18 +4,25 @@ import Card from './Card';
 
 
 // Card-related helper funcitons
-const cards = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'K', 'Q', 'A'];
-
+const cards = ['2', '3', '4', '5', '6', '7', '8', '9', '0', 'J', 'K', 'Q', 'A'];
 const url = 'https://deckofcardsapi.com/api/deck/new/draw/?count=1';
-const pickCard = async () => {
+const cardBack = 'https://deckofcardsapi.com/static/img/back.png';
+const tempCard = {
+  val: 'X',
+  image: cardBack
+};
+
+const getCardFromAPI = async () => {
   const res = await fetch(url);
   const data = await res.json();
   let card = {
-    val: data.cards[0].symbol[0],
+    val: data.cards[0].code[0],
     image: data.cards[0].image
   };
   return card;
 }
+
+
 
 function handValue(hand) {
   var sum = 0;
@@ -44,7 +51,7 @@ function handValue(hand) {
 function handMap(hand) {
   var output = [];
   for (let index in hand) {
-    output.push(<Card value={hand[index].val} key={index}></Card>); 
+    output.push(<Card image={hand[index].image} key={index}></Card>); 
   }
   return output;
 }
@@ -59,8 +66,8 @@ function App() {
 
   // Player intents
   const newGame = () => {
-    setDealer([pickCard(), pickCard()]);
-    setPlayer([pickCard(), pickCard()]);
+    setDealer([tempCard, tempCard]);
+    setPlayer([tempCard, tempCard]);
     setPlayable(true);
     setHidden(true);
     setStanding(false);
@@ -68,13 +75,13 @@ function App() {
 
   const hitPlayer = () => {
     let hitted = [...playerHand];
-    hitted.push(pickCard());
+    hitted.push(tempCard);
     setPlayer(hitted);
   }
 
   const hitDealer = () => {
     let hitted = [...dealerHand];
-    hitted.push(pickCard());
+    hitted.push(tempCard);
     setDealer(hitted);
   }
 
@@ -85,6 +92,44 @@ function App() {
   }
   // end intents
 
+
+  const loadCards = async () => {
+    var newPlayer = [...playerHand];
+    for (let index in newPlayer) {
+      let card = newPlayer[index];
+      if (card.val === 'X') {
+        const res = await fetch(url);
+        const data = await res.json();
+        newPlayer[index] = {
+          val: data.cards[0].code[0],
+          image: data.cards[0].image
+        };
+      }
+    }
+    var newDealer = [...dealerHand];
+    for (let index in newDealer) {
+      let card = newDealer[index];
+      if (card.val === 'X') {
+        const res = await fetch(url);
+        const data = await res.json();
+        newDealer[index] = {
+          val: data.cards[0].code[0],
+          image: data.cards[0].image
+        };
+      }
+    }
+    console.log(newPlayer);
+    setPlayer(newPlayer);
+    setDealer(newDealer);
+  }
+  
+  // Effect: load unknown cards
+  useEffect(() => {
+    loadCards();
+  }, []);
+  
+
+  // Effect: check for player loss
   useEffect(() => {
     let val = handValue(playerHand);
     if (val > 21) {
@@ -94,6 +139,7 @@ function App() {
     }
   }, [playerHand]);
 
+  // Effect: check for endgame by standing
   useEffect(() => {
     if (!standing) {
       return;
@@ -111,12 +157,13 @@ function App() {
     } else {
       setTimeout(() => { alert('Sorry, you lose!'); }, 1000);
     }
-  }, [standing, dealerHand])
+  }, [standing, dealerHand]);
 
+  
   var dealerCards = handMap(dealerHand);
   let playerCards = handMap(playerHand);
   if (dealerCards.length > 1) {
-    dealerCards[0] = <Card key={0} value={dealerHand[0]} hidden={dealerHidden}></Card>;
+    dealerCards[0] = <Card key={0} image={cardBack} hidden={dealerHidden} alt="Unknown Card"></Card>;
   }
   var actions = <div>
     <button onClick={hitPlayer}> Hit </button>
