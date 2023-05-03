@@ -6,22 +6,15 @@ import Card from './Card';
 // Card-related helper funcitons
 const cards = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'K', 'Q', 'A'];
 
-const url = 'https://deckofcardsapi.com/api/deck/new/draw/?count=1';
-const pickCard = async () => {
-  const res = await fetch(url);
-  const data = await res.json();
-  let card = {
-    val: data.cards[0].symbol[0],
-    image: data.cards[0].image
-  };
-  return card;
+const pickCard = () => {
+  return cards[Math.floor(Math.random() * 13)];
 }
 
 function handValue(hand) {
   var sum = 0;
   var aces = 0;
   for (let index in hand) {
-    let card = hand[index].val
+    let card = hand[index]
     if (card === 'A') {
       aces++;
     } else {
@@ -44,7 +37,7 @@ function handValue(hand) {
 function handMap(hand) {
   var output = [];
   for (let index in hand) {
-    output.push(<Card value={hand[index].val} key={index}></Card>);
+    output.push(<Card value={hand[index]} key={index}></Card>);
   }
   return output;
 }
