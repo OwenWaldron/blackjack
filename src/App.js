@@ -40,7 +40,7 @@ function App() {
 
   // Player intents
   const getCardsFromAPI = async (count) => {
-    let res = await fetch(`https://deckofcardsapi.com/api/deck/${deckID}/draw/?count=${count}`);
+    let res = await fetch(`https://deckofcardsapi.com/api/deck/${(count > 1)? 'new' : deckID}/draw/?count=${count}`);
     let data = await res.json();
     setDeckID(data.deck_id);
     return data.cards.map((card) => {
@@ -102,7 +102,7 @@ function App() {
     if (val > 21) {
       setPlayable(false);
       setHidden(false);
-      setTimeout(() => { Alert('Too Many!', 'Sorry, you lose! :(', 'error'); }, 1000);
+      setTimeout(() => { Alert('Too Many!', 'Sorry, you lose!', 'error'); }, 1000);
     }
   }, [playerHand]);
 
@@ -118,11 +118,11 @@ function App() {
     let player = handValue(playerHand);
     let dealer = handValue(dealerHand);
     if (dealer > 21 || dealer < player) {
-      setTimeout(() => { Alert('Nice!', 'Congrats, you win! :)', 'success'); }, 1000);
+      setTimeout(() => { Alert('Nice!', 'Congrats, you win!', 'success'); }, 1000);
     } else if (dealer === player) {
-      setTimeout(() => { Alert('Could be worse', 'You tied :/', 'question'); }, 1000);
+      setTimeout(() => { Alert('Could be worse', 'You tied', 'question'); }, 1000);
     } else {
-      setTimeout(() => { Alert('Not Enough...', 'Sorry, you lose! :(', 'error'); }, 1000);
+      setTimeout(() => { Alert('Not Enough...', 'Sorry, you lose!', 'error'); }, 1000);
     }
   }, [standing, dealerHand]);
 
